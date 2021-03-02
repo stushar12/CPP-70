@@ -1,24 +1,78 @@
-void abc(Node * root,vector<int> &v,int level,int &maxlevel)
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node 
 {
-    if(root==NULL)
-    return ;
-    else
-    {  
-        if(maxlevel<level)
-        {
-              v.push_back(root->data);
-              maxlevel=level;
-        }
-        abc(root->left,v,level+1,maxlevel);
-  
-        abc(root->right,v,level+1,maxlevel);
-    }
+	int data; 
+	Node* left;
+	Node* right;
+};
+
+Node* GetNewNode(int data) 
+{
+	Node* newNode = new Node();
+	newNode->data = data;
+	newNode->left = newNode->right = NULL;
+	return newNode;
 }
-vector<int> leftView(Node *root)
+
+Node* Insert(Node* root,int data) 
 {
-   vector<int> v;
-   int level=1;
-   int maxlevel=0;
-   abc(root,v,1,maxlevel);
-   return v;
+	if(root == NULL)                                      // empty tree
+    {                                           
+		root = GetNewNode(data);
+	}
+	
+	else if(data <= root->data)                         // if data to be inserted is lesser, insert in left subtree. 
+    {
+		root->left = Insert(root->left,data);
+	}
+	
+	else                                                // else, insert in right subtree. 
+    {
+		root->right = Insert(root->right,data);
+	}
+	return root;
+}
+
+void left_view(Node* root)
+{
+	if(root==NULL)
+	return;
+
+	queue<Node*> q;
+	q.push(root);
+
+	while(q.size())
+	{
+		int size=q.size();
+		for(int i=0;i<size;i++)
+		{
+			Node* temp=q.front();
+			q.pop();
+			
+			if(i==0)
+			cout<<temp->data<<" ";
+
+			if(temp->left!=NULL)
+			q.push(temp->left);
+			if(temp->right!=NULL)
+			q.push(temp->right);
+		}
+	}
+}
+
+
+int main() 
+{
+	Node* root = NULL;  // Creating an empty tree
+
+	root = Insert(root,15);	
+	root = Insert(root,10);	
+	root = Insert(root,20);
+	root = Insert(root,25);
+	root = Insert(root,8);
+	root = Insert(root,12);
+
+	left_view(root);
 }
